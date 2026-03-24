@@ -1,0 +1,18 @@
+{
+  "project": "yaniv-study-room-plan",
+  "repo": "yanivmizrachiy/yaniv-study-room-plan",
+  "site": "https://yanivmizrachiy.github.io/yaniv-study-room-plan/",
+  "status": "active",
+  "published": true,
+  "github_pages": true,
+  "ui_language": "he-IL",
+  "direction": "rtl",
+  "last_updated": "2026-03-24T23:17:39",
+  "next_targets": [
+    "workflow trigger button",
+    "repository dispatch",
+    "server-core integration",
+    "n8n integration",
+    "oauth architecture"
+  ]
+}

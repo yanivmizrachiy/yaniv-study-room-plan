@@ -1,0 +1,33 @@
+name: site-health-check
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  check-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Wait for Pages
+        run: sleep 20
+
+      - name: Check live site
+        shell: bash
+        run: |
+          set -e
+          URL="https://yanivmizrachiy.github.io/yaniv-study-room-plan/"
+          echo "Checking $URL"
+          code=$(curl -L -s -o site.html -w "%{http_code}" "$URL")
+          echo "HTTP_CODE=$code"
+          test "$code" = "200"
+          grep -E "יניב|חדר|GitHub|תכנית|מערכת" site.html >/dev/null
+
+      - name: Upload checked page
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-site-snapshot
+          path: site.html

@@ -1,0 +1,29 @@
+name: manual-repo-diagnostics
+
+on:
+  workflow_dispatch:
+    inputs:
+      note:
+        description: "הערה לבדיקה"
+        required: false
+        default: "manual run"
+
+jobs:
+  diagnostics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Print repo state
+        run: |
+          echo "Repository: yanivmizrachiy/yaniv-study-room-plan"
+          echo "Note: ${{ inputs.note }}"
+          echo "Branch: $GITHUB_REF_NAME"
+          echo "Commit: $GITHUB_SHA"
+          echo "Time: $(date -u)"
+          ls -la
+          echo "--- state/system-status.json ---"
+          cat state/system-status.json || true
+          echo "--- RULES.md ---"
+          sed -n '1,220p' RULES.md || true
