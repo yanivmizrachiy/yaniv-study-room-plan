@@ -1,11 +1,7 @@
 param(
-  [ValidateSet("refresh_state","open_repo","check_site","export_state","sync_docs")]
   [string]$Command = "refresh_state",
-
   [string]$Target = "yaniv-study-room-plan",
-
-  [string]$Note = "local powershell trigger",
-
+  [string]$Note = "fixed script",
   [switch]$UseRepositoryDispatch
 )
 
@@ -14,12 +10,7 @@ $ErrorActionPreference = "Stop"
 
 $Repo = "yanivmizrachiy/yaniv-study-room-plan"
 
-try {
-  gh auth status | Out-Null
-} catch {
-  Write-Host "gh לא מחובר. תריץ קודם gh auth login" -ForegroundColor Red
-  exit 1
-}
+gh auth status | Out-Null
 
 if ($UseRepositoryDispatch) {
   $payload = @{
@@ -28,25 +19,20 @@ if ($UseRepositoryDispatch) {
       command = $Command
       target  = $Target
       note    = $Note
-      source  = "local-powershell"
+      source  = "fixed-script"
       sent_at = (Get-Date).ToString("s")
     }
-  } | ConvertTo-Json -Depth 6 -Compress
+  } | ConvertTo-Json -Depth 6
 
-  $tmp = Join-Path $env:TEMP "room-command-dispatch.json"
-  $payload | Set-Content -Path $tmp -Encoding UTF8
+  $tmp = Join-Path $env:TEMP "dispatch.json"
+  $payload | Set-Content $tmp -Encoding UTF8
 
   gh api "repos/$Repo/dispatches" --method POST --input $tmp
-  Write-Host ""
-  Write-Host "repository_dispatch נשלח בהצלחה." -ForegroundColor Green
-  Write-Host "Repo: https://github.com/$Repo" -ForegroundColor Cyan
-  Write-Host "Actions: https://github.com/$Repo/actions" -ForegroundColor Cyan
-  exit 0
+
+  Write-Host "dispatch נשלח ✔" -ForegroundColor Green
+  exit
 }
 
-gh workflow run "room-command.yml" --repo $Repo -f command=$Command -f target=$Target -f note="$Note"
+gh workflow run room-command.yml --repo $Repo --ref main -f command=$Command -f target=$Target -f note="$Note"
 
-Write-Host ""
-Write-Host "workflow_dispatch נשלח בהצלחה." -ForegroundColor Green
-Write-Host "Repo: https://github.com/$Repo" -ForegroundColor Cyan
-Write-Host "Actions: https://github.com/$Repo/actions" -ForegroundColor Cyan
+Write-Host "workflow נשלח ✔" -ForegroundColor Green
