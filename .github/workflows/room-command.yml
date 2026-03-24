@@ -1,0 +1,55 @@
+name: room-command
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "סוג הפקודה"
+        required: true
+        default: "refresh_state"
+        type: choice
+        options:
+          - refresh_state
+          - open_repo
+          - check_site
+          - export_state
+          - sync_docs
+      target:
+        description: "יעד"
+        required: false
+        default: "yaniv-study-room-plan"
+      note:
+        description: "הערה"
+        required: false
+        default: "manual command"
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build command result
+        shell: bash
+        run: |
+          mkdir -p state
+          cat > state/last-room-command.json <<EOF
+          {
+            "command": "${{ inputs.command }}",
+            "target": "${{ inputs.target }}",
+            "note": "${{ inputs.note }}",
+            "source": "workflow_dispatch",
+            "repo": "yanivmizrachiy/yaniv-study-room-plan",
+            "site": "https://yanivmizrachiy.github.io/yaniv-study-room-plan/",
+            "executed_at_utc": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+            "status": "ok"
+          }
+          EOF
+          cat state/last-room-command.json
+
+      - name: Upload command artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: room-command-result
+          path: state/last-room-command.json

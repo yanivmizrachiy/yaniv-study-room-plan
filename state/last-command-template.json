@@ -1,0 +1,7 @@
+{
+  "command": "refresh_state",
+  "target": "yaniv-study-room-plan",
+  "note": "template",
+  "source": "manual",
+  "status": "draft"
+}
