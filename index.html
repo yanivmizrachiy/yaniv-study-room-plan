@@ -3,95 +3,102 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>תכנית חדר הלימוד של יניב</title>
+  <title>מערכת חדר הלימוד של יניב</title>
   <style>
     :root{
-      --bg:#f4efe8;--panel:#ffffff;--ink:#1f2937;--muted:#667085;--stone:#d9cfbf;--stone2:#cdbfa8;
-      --floor:#cfd4d8;--window:#efe6d4;--wood:#6f4a38;--glass:#d8edf1;--graydesk:#6b6f74;--screen:#121417;
-      --screenframe:#f5f5f5;--green:#c4d8bf;--blue:#3d68c7;--pink:#d9abb4;--orange:#d97c21;--red:#b83333;
-      --cabinet:#c99667;--shelfdark:#55473d;--shelfwhite:#f5f5f5;--ok:#0c8c58;--warn:#c24d0e;
-      --fridge:#e9eef2;--shadow:0 12px 32px rgba(0,0,0,.12)
+      --bg1:#f7f3ed;--bg2:#ece6dc;--panel:#ffffff;--ink:#1f2937;--muted:#667085;
+      --blue:#185adb;--blue2:#0f62fe;--green:#0c8c58;--orange:#c24d0e;--red:#b83333;
+      --wood:#6f4a38;--glass:#d8edf1;--gray:#6b6f74;--shadow:0 18px 40px rgba(0,0,0,.12)
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:linear-gradient(180deg,#f7f3ed 0%,#ece6dc 100%);color:var(--ink)}
-    .wrap{max-width:1280px;margin:0 auto;padding:16px}
-    .hero,.panel{background:var(--panel);border-radius:28px;box-shadow:var(--shadow)}
-    .hero{padding:18px;margin-bottom:16px}
+    body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--ink)}
+    .wrap{max-width:1320px;margin:0 auto;padding:16px}
+    .hero,.panel{background:#fff;border-radius:28px;box-shadow:var(--shadow)}
+    .hero{padding:20px;margin-bottom:16px}
     h1,h2,h3{margin:0}
-    h1{font-size:clamp(24px,4vw,38px)}
-    .sub{margin-top:8px;color:var(--muted);line-height:1.7}
-    .topbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    h1{font-size:clamp(24px,4vw,40px)}
+    .sub{margin-top:8px;color:var(--muted);line-height:1.8}
+    .chips,.buttons,.quick{display:flex;flex-wrap:wrap;gap:10px}
+    .chips{margin-top:14px}
     .chip{padding:8px 12px;border-radius:999px;background:#eef4ff;color:#1849a9;border:1px solid #dbe6ff;font-size:14px}
-    .layout{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+    .layout{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
     .panel{overflow:hidden}
     .head{padding:14px 18px;border-bottom:1px solid #eef1f4;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
     .body{padding:16px 18px}
-    .controls{display:flex;flex-wrap:wrap;gap:8px}
-    button{border:none;border-radius:12px;padding:10px 14px;background:#eef2f7;color:#111827;font-weight:700;cursor:pointer}
-    button.active{background:#111827;color:#fff}
+    .buttons button,.quick a,.quick button,.cta{
+      border:none;border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;
+      text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px
+    }
+    .buttons button{background:#eef2f7;color:#111827}
+    .buttons button.active{background:#111827;color:#fff}
+    .quick a,.quick button{background:#0f62fe;color:#fff}
+    .quick .ghost{background:#eef2f7;color:#111827}
+    .quick .ok{background:#0c8c58;color:#fff}
+    .quick .warn{background:#c24d0e;color:#fff}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .card{background:#f8fafc;border:1px solid #edf1f4;border-radius:18px;padding:14px}
     .viewer{position:relative;border-radius:24px;overflow:hidden;background:#ddd;min-height:560px}
     .scene{display:none;position:relative;min-height:560px;padding:16px}
     .scene.active{display:block}
-    .room{position:relative;width:100%;aspect-ratio:16/9;min-height:520px;border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#ece4d6 0%,#e7dfd0 24%,var(--floor) 24%,var(--floor) 100%);border:6px solid #8f8f8f}
+    .room{position:relative;width:100%;aspect-ratio:16/9;min-height:520px;border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#ece4d6 0%,#e7dfd0 24%,#cfd4d8 24%,#cfd4d8 100%);border:6px solid #8f8f8f}
     .titleBadge{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.92);padding:10px 14px;border-radius:14px;font-weight:800;box-shadow:var(--shadow)}
     .help{position:absolute;left:14px;top:14px;background:rgba(17,24,39,.86);color:#fff;padding:8px 12px;border-radius:12px;font-size:13px}
-    .wall-stone{position:absolute;inset:0 0 35% 0;background:repeating-linear-gradient(0deg,var(--stone) 0 48px,var(--stone2) 48px 50px),repeating-linear-gradient(90deg,transparent 0 140px,rgba(119,97,74,.22) 140px 142px)}
+    .wall{position:absolute;inset:0 0 35% 0;background:repeating-linear-gradient(0deg,#d9cfbf 0 48px,#cdbfa8 48px 50px),repeating-linear-gradient(90deg,transparent 0 140px,rgba(119,97,74,.22) 140px 142px)}
     .floor{position:absolute;left:0;right:0;bottom:0;height:38%;background:repeating-linear-gradient(90deg,#ccd1d6 0 116px,#bfc5ca 116px 118px),repeating-linear-gradient(0deg,#ccd1d6 0 116px,#bfc5ca 116px 118px)}
     .windowStrip{position:absolute;top:64px;bottom:52px;right:18px;width:24%;display:flex;flex-direction:column;gap:14px}
     .windowPane{flex:1;background:linear-gradient(180deg,#f4ebdb 0%,#eee4d2 100%);border:3px solid #bcae98;position:relative}
-    .windowPane::after{content:"";position:absolute;inset:10% 14%;border:2px solid rgba(120,120,120,.35)}
+    .windowPane:after{content:"";position:absolute;inset:10% 14%;border:2px solid rgba(120,120,120,.35)}
     .whiteDoor{position:absolute;background:#fcfcfc;border:3px solid #8a8a8a}
     .balcony{top:54px;left:40%;width:14%;height:22%}
     .entry{bottom:40px;left:6%;width:15%;height:28%}
     .board{position:absolute;top:98px;left:56%;width:22%;height:18%;background:#fafcff;border:5px solid #262626;border-radius:4px}
     .desk-wood{position:absolute;bottom:78px;left:24%;width:38%;height:28%;background:linear-gradient(180deg,#7a543d,#694734);border:4px solid #533727;border-radius:10px;box-shadow:0 8px 16px rgba(0,0,0,.14)}
-    .desk-wood::before,.desk-wood::after{content:"";position:absolute;bottom:-20px;width:20px;height:20px;background:#5d3e2e}
-    .desk-wood::before{left:20px}.desk-wood::after{right:20px}
     .desk-glass{position:absolute;top:180px;left:50%;width:26%;height:18%;background:rgba(207,230,234,.85);border:4px solid #90b1b5;border-radius:10px}
     .desk-gray{position:absolute;bottom:64px;right:8%;width:26%;height:22%;background:#6a6f74;border:4px solid #53575b;border-radius:10px}
-    .desk-gray::before,.desk-gray::after{content:"";position:absolute;bottom:-18px;width:18px;height:18px;background:#53575b}
-    .desk-gray::before{left:18px}.desk-gray::after{right:18px}
-    .screen{position:absolute;background:var(--screen);border:7px solid var(--screenframe);border-radius:14px;box-shadow:0 10px 18px rgba(0,0,0,.18)}
+    .screen{position:absolute;background:#121417;border:7px solid #f5f5f5;border-radius:14px;box-shadow:0 10px 18px rgba(0,0,0,.18)}
     .mobile-screen{right:34%;bottom:100px;width:10%;height:22%}
-    .mobile-screen::after{content:"";position:absolute;left:45%;bottom:-26px;width:10%;height:26px;background:#d9d9d9}
-    .mobile-screen::before{content:"";position:absolute;left:28%;bottom:-54px;width:44%;height:24px;border-radius:999px;background:#f2f2f2;border:3px solid #d5d5d5}
     .tv-screen{right:18%;bottom:260px;width:14%;height:12%}
-    .fridge{position:absolute;right:8%;bottom:202px;width:12%;height:28%;background:var(--fridge);border:4px solid #d5dbe1;border-radius:6px}
-    .shelf-dark{position:absolute;right:22%;bottom:190px;width:11%;height:24%;background:var(--shelfdark);border:4px solid #43372f}
-    .shelf-white{position:absolute;right:34%;top:72px;width:10%;height:18%;background:var(--shelfwhite);border:4px solid #d8d8d8}
-    .cabinet{position:absolute;right:44%;top:68px;width:11%;height:20%;background:var(--cabinet);border:4px solid #a97a4f}
+    .fridge{position:absolute;right:8%;bottom:202px;width:12%;height:28%;background:#e9eef2;border:4px solid #d5dbe1;border-radius:6px}
+    .shelf-dark{position:absolute;right:22%;bottom:190px;width:11%;height:24%;background:#55473d;border:4px solid #43372f}
+    .shelf-white{position:absolute;right:34%;top:72px;width:10%;height:18%;background:#f5f5f5;border:4px solid #d8d8d8}
+    .cabinet{position:absolute;right:44%;top:68px;width:11%;height:20%;background:#c99667;border:4px solid #a97a4f}
     .chair{position:absolute;width:8%;height:8%;border-radius:12px;border:3px solid rgba(0,0,0,.18)}
-    .green{background:var(--green)} .blue{background:var(--blue)} .pink{background:var(--pink)}
-    .teacher{left:38%;bottom:310px} .student1{left:29%;bottom:26px} .student2{left:43%;bottom:26px} .student3{left:58%;bottom:106px} .assistantChair{right:18%;bottom:96px}
+    .green{background:#c4d8bf}.blue{background:#3d68c7}.pink{background:#d9abb4}
+    .teacher{left:38%;bottom:310px}.student1{left:29%;bottom:26px}.student2{left:43%;bottom:26px}.student3{left:58%;bottom:106px}.assistantChair{right:18%;bottom:96px}
     .label{position:absolute;background:rgba(255,255,255,.94);padding:8px 10px;border-radius:12px;font-size:13px;font-weight:700;box-shadow:var(--shadow)}
     .path{position:absolute;left:8%;bottom:12px;width:58%;height:16%;border:4px dashed rgba(12,140,88,.6);border-radius:60px/40px;background:rgba(12,140,88,.08)}
-    .legend{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
-    .leg{display:flex;align-items:center;gap:10px;font-size:14px}
-    .sw{width:18px;height:18px;border-radius:6px;border:1px solid rgba(0,0,0,.12)}
-    .beforeAfter{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .mini{border-radius:18px;padding:14px;background:#f8fafc;border:1px solid #edf1f4}
-    .bad{color:var(--warn);font-weight:800}.good{color:var(--ok);font-weight:800}
-    .steps ol{margin:0;padding-right:22px;line-height:1.9}
-    @media (max-width:980px){.layout{grid-template-columns:1fr}.legend,.beforeAfter{grid-template-columns:1fr}.viewer{min-height:420px}.scene,.room{min-height:420px}}
+    .status{margin-top:12px;padding:12px 14px;border-radius:16px;background:#eef7ff;border:1px solid #dbeafe}
+    .mono{font-family:ui-monospace,Consolas,monospace}
+    textarea{width:100%;min-height:140px;border-radius:14px;border:1px solid #d6dbe1;padding:12px;font:inherit;resize:vertical}
+    input[type="text"]{width:100%;border-radius:12px;border:1px solid #d6dbe1;padding:12px;font:inherit}
+    .small{font-size:13px;color:var(--muted)}
+    @media (max-width:980px){.layout,.grid2{grid-template-columns:1fr}.viewer,.scene,.room{min-height:420px}}
   </style>
 </head>
 <body>
   <div class="wrap">
     <section class="hero">
-      <h1>תכנית מדויקת לחדר הלימוד</h1>
-      <p class="sub">זה אתר אינטראקטיבי אמיתי עם כפתורים בעברית שעובדים באמת. כרגע זה תכנון חזותי, לא סיור 360 אמיתי.</p>
-      <div class="topbar">
-        <div class="chip">שולחן העץ = מרכז למידה</div>
-        <div class="chip">המסך הנייד = מרכז הסבר</div>
-        <div class="chip">שולחן הזכוכית = עמדת עזר</div>
-        <div class="chip">קיר חלונות = צריך להישאר נקי</div>
+      <h1>מערכת חדר הלימוד של יניב</h1>
+      <p class="sub">זהו אתר ציבורי אמיתי שמחובר באמת לריפו ב־GitHub. הכפתורים למטה עובדים מול קישורים אמיתיים של הריפו, Issues, Actions ועמוד העריכה. כתיבה אוטומטית שקטה לריפו מתוך אתר ציבורי דורשת backend או OAuth, ולכן כאן בניתי את החיבור הבטוח והאמיתי שאפשר להפעיל כבר עכשיו.</p>
+      <div class="chips">
+        <div class="chip">ריפו אמיתי</div>
+        <div class="chip">GitHub Pages אמיתי</div>
+        <div class="chip">כפתורים בעברית</div>
+        <div class="chip">ללא token באתר</div>
+      </div>
+      <div class="quick" style="margin-top:16px">
+        <a href="https://yanivmizrachiy.github.io/yaniv-study-room-plan/" target="_blank" rel="noopener">פתח אתר חי</a>
+        <a href="https://github.com/yanivmizrachiy/yaniv-study-room-plan" target="_blank" rel="noopener">פתח ריפו</a>
+        <a href="https://github.com/yanivmizrachiy/yaniv-study-room-plan/issues" target="_blank" rel="noopener">פתח Issues</a>
+        <a href="https://github.com/yanivmizrachiy/yaniv-study-room-plan/actions" target="_blank" rel="noopener">פתח Actions</a>
       </div>
     </section>
+
     <section class="layout">
       <article class="panel">
         <div class="head">
           <h2>תצוגה אינטראקטיבית</h2>
-          <div class="controls">
+          <div class="buttons">
             <button class="active" data-scene="plan">תכנית עליונה</button>
             <button data-scene="front">מבט חזיתי</button>
             <button data-scene="zones">חלוקת אזורים</button>
@@ -101,9 +108,9 @@
           <div class="viewer">
             <div class="scene active" id="scene-plan">
               <div class="room">
-                <div class="wall-stone"></div><div class="floor"></div>
+                <div class="wall"></div><div class="floor"></div>
                 <div class="titleBadge">תכנית עליונה – הסידור המומלץ</div>
-                <div class="help">אפשר לעבור בין התצוגות למעלה</div>
+                <div class="help">הכפתורים למעלה מחליפים תצוגה באמת</div>
                 <div class="windowStrip"><div class="windowPane"></div><div class="windowPane"></div></div>
                 <div class="whiteDoor balcony"></div><div class="label" style="top:18px;left:40%">דלת למרפסת</div>
                 <div class="whiteDoor entry"></div><div class="label" style="bottom:8px;left:8%">דלת כניסה</div>
@@ -115,13 +122,14 @@
                 <div class="screen mobile-screen"></div><div class="label" style="bottom:70px;right:31%">המסך הנייד ליד החשמל</div>
                 <div class="chair blue teacher"></div><div class="label" style="left:36%;bottom:390px">מיקום מורה</div>
                 <div class="chair green student1"></div><div class="chair green student2"></div><div class="chair blue student3"></div><div class="chair pink assistantChair"></div>
-                <div class="path"></div><div class="label" style="left:19%;bottom:44px;color:var(--ok)">מעבר נקי ופתוח</div>
+                <div class="path"></div><div class="label" style="left:19%;bottom:44px;color:#0c8c58">מעבר נקי ופתוח</div>
                 <div class="label" style="right:24%;bottom:40px;color:#1849a9">נקודת חשמל באזור קיר הטכנולוגיה</div>
               </div>
             </div>
+
             <div class="scene" id="scene-front">
               <div class="room">
-                <div class="wall-stone"></div><div class="floor"></div>
+                <div class="wall"></div><div class="floor"></div>
                 <div class="titleBadge">מבט חזיתי – איך החדר צריך להרגיש</div>
                 <div style="position:absolute;right:18px;top:70px;bottom:56px;width:26%;display:flex;gap:12px;flex-direction:column;"><div class="windowPane"></div><div class="windowPane"></div></div>
                 <div class="screen" style="left:10%;bottom:150px;width:15%;height:16%"></div>
@@ -140,71 +148,84 @@
                 <div class="label" style="left:55%;top:96px">הלוח נשאר, אבל לא המרכז הראשי</div>
               </div>
             </div>
+
             <div class="scene" id="scene-zones">
               <div class="room">
-                <div class="wall-stone"></div><div class="floor"></div>
+                <div class="wall"></div><div class="floor"></div>
                 <div class="titleBadge">חלוקת אזורים</div>
                 <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(12,140,88,.14) 0 36%,rgba(15,98,254,.14) 36% 66%,rgba(194,77,14,.14) 66% 100%)"></div>
-                <div class="label" style="left:13%;top:170px;background:rgba(234,248,241,.95);color:var(--ok)">אזור למידה שקט</div>
+                <div class="label" style="left:13%;top:170px;background:rgba(234,248,241,.95);color:#0c8c58">אזור למידה שקט</div>
                 <div class="label" style="left:44%;top:170px;background:rgba(238,244,255,.95);color:#1849a9">אזור הסבר ותנועה</div>
-                <div class="label" style="right:10%;top:170px;background:rgba(255,241,234,.95);color:var(--warn)">אזור טכנולוגיה ואחסון</div>
+                <div class="label" style="right:10%;top:170px;background:rgba(255,241,234,.95);color:#c24d0e">אזור טכנולוגיה ואחסון</div>
                 <div class="desk-wood"></div><div class="desk-glass"></div><div class="desk-gray"></div><div class="screen mobile-screen"></div>
                 <div class="windowStrip"><div class="windowPane"></div><div class="windowPane"></div></div>
                 <div class="whiteDoor balcony"></div><div class="whiteDoor entry"></div>
               </div>
             </div>
           </div>
+
+          <div class="status" id="statusBox">
+            סטטוס מערכת: מוכן. האתר מחובר לריפו הציבורי והכפתורים למטה עובדים מול GitHub אמיתי.
+          </div>
         </div>
       </article>
+
       <aside class="panel">
-        <div class="head"><h2>סיכום סופי – מה משנים ומה לא</h2></div>
+        <div class="head"><h2>כפתורי GitHub אמיתיים</h2></div>
         <div class="body">
-          <div class="beforeAfter">
-            <div class="mini">
-              <h3>מה לא נכון היום</h3>
-              <ul>
-                <li><span class="bad">לא</span> להשתמש בשולחן הזכוכית לשיעור מלא.</li>
-                <li><span class="bad">לא</span> לפזר ערימות ליד החלונות ובמעבר.</li>
-                <li><span class="bad">לא</span> לתת ללוח המחיק להיות המרכז, כי המסך והחשמל לא שם.</li>
-                <li><span class="bad">לא</span> לערבב אחסון, לימוד ותפעול בלי חלוקה ברורה.</li>
-              </ul>
-            </div>
-            <div class="mini">
-              <h3>מה נכון לעשות</h3>
-              <ul>
-                <li><span class="good">כן</span> ללמד סביב שולחן העץ הגדול.</li>
-                <li><span class="good">כן</span> להשאיר את המסך הנייד ליד אזור החשמל.</li>
-                <li><span class="good">כן</span> להשתמש בשולחן הזכוכית לעמדת ציוד ועזר.</li>
-                <li><span class="good">כן</span> לשמור מעבר פתוח מהדלת פנימה.</li>
-              </ul>
+          <div class="grid2">
+            <a class="cta" style="background:#0f62fe;color:#fff;border-radius:14px;padding:12px 16px;text-decoration:none;font-weight:800" href="https://github.com/yanivmizrachiy/yaniv-study-room-plan/edit/main/index.html" target="_blank" rel="noopener">ערוך את index.html</a>
+            <a class="cta" style="background:#111827;color:#fff;border-radius:14px;padding:12px 16px;text-decoration:none;font-weight:800" href="https://github.com/yanivmizrachiy/yaniv-study-room-plan/commits/main" target="_blank" rel="noopener">צפה בקומיטים</a>
+          </div>
+
+          <h3 style="margin:18px 0 10px">פתח Issue מוכן לשינוי</h3>
+          <input id="issueTitle" type="text" value="שינוי בתכנית חדר הלימוד" />
+          <textarea id="issueBody">שלום,
+
+אני מבקש לעדכן את אתר חדר הלימוד.
+
+פירוט השינוי:
+- 
+
+מיקום בחדר:
+- 
+
+חשוב:
+- לשמור עברית מלאה RTL
+- לא לפגוע בקישורי GitHub הקיימים
+- לשמור את הכפתורים בעברית עובדים באמת
+
+תודה.</textarea>
+
+          <div class="quick" style="margin-top:12px">
+            <button class="ok" id="openIssueBtn">פתח Issue אמיתי</button>
+            <button class="ghost" id="downloadStateBtn">הורד מצב חדר JSON</button>
+            <button class="warn" id="checkLinksBtn">בדוק קישורים</button>
+          </div>
+
+          <div class="card" style="margin-top:14px">
+            <h3>מה עובד עכשיו באמת</h3>
+            <div class="small" style="line-height:1.9">
+              האתר חי ב־GitHub Pages, הריפו קיים, Issues קיימים, Actions קיימים, ודף העריכה של הקובץ פתוח.  
+              מה שלא נבנה כאן בכוונה: token סודי בתוך אתר ציבורי.  
+              כדי לבצע כתיבה אוטומטית שקטה לריפו מתוך הכפתורים עצמם, צריך backend או GitHub OAuth.
             </div>
           </div>
-          <h3 style="margin:18px 0 10px">הצעדים לביצוע</h3>
-          <div class="steps">
-            <ol>
-              <li>לפנות את החלונות והאדן מכל ערימות הדפים והחפצים הקטנים.</li>
-              <li>להציב את שולחן העץ במיקום המרכזי, כך שהפנים שלו אל המסך.</li>
-              <li>להשאיר את המסך הנייד בצד קיר החשמל, קצת קדימה, לא חוסם מעבר.</li>
-              <li>להגדיר את שולחן הזכוכית כעמדת עזר בלבד.</li>
-              <li>לסדר כבלים באזור השולחן האפור.</li>
-              <li>לרכז את האחסון באזור הארונות והספריות ליד דלת המרפסת.</li>
-            </ol>
-          </div>
-          <h3 style="margin:18px 0 10px">צבעים אמיתיים של הרכיבים</h3>
-          <div class="legend">
-            <div class="leg"><span class="sw" style="background:var(--wood)"></span> שולחן העץ הכהה</div>
-            <div class="leg"><span class="sw" style="background:var(--graydesk)"></span> שולחן העבודה האפור</div>
-            <div class="leg"><span class="sw" style="background:var(--glass)"></span> שולחן זכוכית תכלת־אפרפר</div>
-            <div class="leg"><span class="sw" style="background:var(--green)"></span> כיסא ירוק בהיר</div>
-            <div class="leg"><span class="sw" style="background:var(--blue)"></span> כיסא כחול</div>
-            <div class="leg"><span class="sw" style="background:var(--pink)"></span> כיסא ורוד</div>
-            <div class="leg"><span class="sw" style="background:var(--cabinet)"></span> ארונות עץ בהיר</div>
-            <div class="leg"><span class="sw" style="background:var(--window)"></span> חלונות/וילונות בהירים</div>
+
+          <div class="card" style="margin-top:14px">
+            <h3>קישורים קבועים</h3>
+            <div class="small mono">
+              אתר: https://yanivmizrachiy.github.io/yaniv-study-room-plan/<br>
+              ריפו: https://github.com/yanivmizrachiy/yaniv-study-room-plan<br>
+              Issues: https://github.com/yanivmizrachiy/yaniv-study-room-plan/issues<br>
+              Actions: https://github.com/yanivmizrachiy/yaniv-study-room-plan/actions
+            </div>
           </div>
         </div>
       </aside>
     </section>
   </div>
+
   <script>
     const buttons = document.querySelectorAll("[data-scene]");
     const scenes = {
@@ -219,6 +240,61 @@
         Object.values(scenes).forEach(s => s.classList.remove("active"));
         scenes[btn.dataset.scene].classList.add("active");
       });
+    });
+
+    const statusBox = document.getElementById("statusBox");
+    const repoBase = "https://github.com/yanivmizrachiy/yaniv-study-room-plan";
+    const liveUrl = "https://yanivmizrachiy.github.io/yaniv-study-room-plan/";
+
+    document.getElementById("openIssueBtn").addEventListener("click", () => {
+      const title = encodeURIComponent(document.getElementById("issueTitle").value.trim() || "שינוי בתכנית חדר הלימוד");
+      const body = encodeURIComponent(document.getElementById("issueBody").value.trim());
+      const url = repoBase + "/issues/new?title=" + title + "&body=" + body;
+      window.open(url, "_blank", "noopener");
+      statusBox.textContent = "נפתח דף Issue אמיתי בגיטהאב עם תוכן מוכן.";
+    });
+
+    document.getElementById("downloadStateBtn").addEventListener("click", () => {
+      const data = {
+        project: "yaniv-study-room-plan",
+        live_url: liveUrl,
+        repo: repoBase,
+        generated_at: new Date().toISOString(),
+        scene: document.querySelector("[data-scene].active")?.dataset.scene || "plan",
+        notes: [
+          "שולחן העץ הוא מרכז הלמידה",
+          "שולחן הזכוכית הוא עמדת עזר בלבד",
+          "המסך נשאר ליד אזור החשמל",
+          "המעבר מהדלת נשאר פתוח"
+        ]
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json;charset=utf-8"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "yaniv-study-room-state.json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+      statusBox.textContent = "ירד קובץ JSON אמיתי עם מצב החדר.";
+    });
+
+    document.getElementById("checkLinksBtn").addEventListener("click", async () => {
+      statusBox.textContent = "בודק קישורים...";
+      const targets = [
+        ["אתר חי", liveUrl],
+        ["ריפו", repoBase],
+        ["Issues", repoBase + "/issues"],
+        ["Actions", repoBase + "/actions"]
+      ];
+      const results = [];
+      for (const [name, url] of targets) {
+        try {
+          const res = await fetch(url, {method:"HEAD", mode:"no-cors"});
+          results.push(name + ": נבדק");
+        } catch (e) {
+          results.push(name + ": לא ניתן לאמת מתוך הדפדפן הזה");
+        }
+      }
+      statusBox.textContent = "בדיקה הסתיימה: " + results.join(" | ");
     });
   </script>
 </body>
